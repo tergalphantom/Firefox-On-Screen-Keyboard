@@ -13,9 +13,9 @@ storageData.then(storedSetup, onError);
 function storedSetup(settings) {
 	if (!settings.hasOwnProperty("scaleValue") || settings.scaleValue === null) {
 		browser.storage.local.set({
-			scaleValue: 90,
+			scaleValue: 60,
 		});
-		settings.scaleValue = 90;
+		settings.scaleValue = 60;
 	}
 	if (!settings.hasOwnProperty("numpadState") || settings.numpadState === null) {
 		browser.storage.local.set({
@@ -63,28 +63,29 @@ var xpath = {
 };
 
 var FxKeyboardLocale = '{'+
-    '"name": "English",'+
-    '"locale": "en",'+
+    '"name": "French",'+
+    '"locale": "fr",'+
     '"defaultFlex": "10",'+
     '"main": [['+
-            '["`", "~"],'+
-            '["1", "!"],'+
-            '["2", "@"],'+
-            '["3", "#"],'+
-            '["4", "$"],'+
-            '["5", "%"],'+
-            '["6", "^"],'+
-            '["7", "&"],'+
-            '["8", "*"],'+
-            '["9", "("],'+
-            '["0", ")"],'+
-            '["-", "_"],'+
+            '["²", "§"],'+
+            '["1", "&"],'+
+            '["2", "é"],'+
+            '["3", "\\""],'+
+            '["4", "\'"],'+
+            '["5", "("],'+
+            '["6", "-"],'+
+            '["7", "è"],'+
+            '["8", "_"],'+
+            '["9", "ç"],'+
+            '["0", "à"],'+
+            '["°", ")"],'+
             '["=", "+"],'+
-            '[{"label": "Delete", "special": 8, "flex": 10, "type": "repeat"}]'+ // backspace
+			'["€", "^"],'+
+			'[{"label": "Retour", "special": 8, "flex": 1, "type": "repeat"}]'+ // backspace
         '], ['+
             '[{"label": "Tab", "string": "\\t", "flex": 1}],'+ // TAB
-            '["q", "Q"],'+
-            '["w", "W"],'+
+            '["a", "A"],'+
+            '["z", "Z"],'+
             '["e", "E"],'+
             '["r", "R"],'+
             '["t", "T"],'+
@@ -95,10 +96,11 @@ var FxKeyboardLocale = '{'+
             '["p", "P"],'+
             '["&#91;", "&#123;"],'+
             '["&#93;", "&#125;"],'+
-            '["\\\\","|","1"]'+
+            '["$", "£"],'+
+			'[{"label": "Fermer","special": "closeFX","flex": 1}]'+
         "], ["+
-            '[{"label": "@", "string":"@", "flex": 10, "special": 50}],'+
-            '["a", "A"],'+
+            '[{"label": "", "string":"", "flex": 1, "special": 50}],'+
+            '["q", "Q"],'+
             '["s", "S"],'+
             '["d", "D"],'+
             '["f", "F"],'+
@@ -107,27 +109,39 @@ var FxKeyboardLocale = '{'+
             '["j", "J"],'+
             '["k", "K"],'+
             '["l", "L"],'+
-            '[";", ":"],'+
-            '["\'", "\\""],'+
-            '[{"label": "Enter", "flex": 15, "special": 13}]'+
+            '["m", "M"],'+
+            '["ù", "%"],'+
+			'["*", "µ"],'+
+            '[{"label": "Entrée", "flex": 1, "special": 13}]'+
         '], ['+
-            '[{"label": "Shift", "flex": 10, "special": "shift"}],'+
-            '["z", "Z"],'+
+            '[{"label": "Shift", "flex": 1, "special": "shift"}],'+
+            '["w", "W"],'+
             '["x", "X"],'+
             '["c", "C"],'+
             '["v", "V"],'+
             '["b", "B"],'+
             '["n", "N"],'+
-            '["m", "M"],'+
-            '[",", "<"],'+
-            '[".", ">"],'+
-            '["/", "?"],'+
-            '[{"label": "Close","special": "closeFX","flex": 10}]'+
+            '[",", "?"],'+
+            '[";", "."],'+
+            '[":", "/"],'+
+            '["!", "\\\\"],'+
+			'["#", "|"],'+
+            '[{"label": "@", "string":"@", "flex": 1, "special": 50}]'+
         '], ['+
-            '[{"label": "Space", "flex": 5, "special": 32}],'+ // space
-            '[{"label":".com", "flex": 1}],'+
-            '[{"label":".au", "flex": 1}]'+
-        ']]'+
+		    '[{"label":"free", "flex": 1}],'+
+			'[{"label":"gmail", "flex": 1}],'+
+			'[{"label":"hotmail", "flex": 1}],'+
+            '[{"label":"laposte", "flex": 1}],'+
+			'[{"label":"orange", "flex": 1}],'+
+			'[{"label":"outlook", "flex": 1}],'+
+			'[{"label":"sfr", "flex": 1}],'+
+			'[{"label":"yahoo", "flex": 1}]'+
+		'], ['+
+		    '[{"label": "Espace", "flex": 5, "special": 32}],'+ // space
+		    '[{"label":".com", "flex": 1}],'+
+            '[{"label":".fr", "flex": 1}],'+
+			'[{"label":".net", "flex": 1}]'+
+			']]'+
 '}';
 
 FxKeyNumpad = JSON.stringify({
@@ -142,9 +156,9 @@ FxKeyNumpad = JSON.stringify({
         ], [
             ["7"], ["8"], ["9"]
         ], [
-            ["0"], [{"label": "Delete", "special": 8, "flex": 1, "type": "repeat"}]
+            ["0"], [{"label": "Retour", "special": 8, "flex": 1, "type": "repeat"}]
         ], [
-            [{"label": "Close","special": "closeFX","flex": 1}]
+            [{"label": "Fermer","special": "closeFX","flex": 1}]
         ]
     ]
 });
@@ -229,7 +243,7 @@ var fxKeyboard = {
         repeat_all: true,
         keep_closed: false,
         startingURL: document.location.href,
-        locale_default: 'en',
+        locale_default: 'fr',
         secScaleX: 0,
         secScaleY: 0,
         scale: 0,
@@ -237,7 +251,7 @@ var fxKeyboard = {
         preScale: 0,
         padding: 8,
         kb_max_width: window.innerWidth,
-        kb_max_height: window.innerWidth*0.30,
+        kb_max_height: window.innerWidth*0.335,
         np_max_width: 220,
         np_max_height: 375,
 		key_height: window.innerWidth*0.05
@@ -348,31 +362,32 @@ var fxKeyboard = {
                 } 
                 fxKeyboard._setShift();
             };
-        } else if (obj.label === "Delete") {
+        } else if (obj.label === "Retour") {
             keyD.onmouseup = function () {
                 fxKeyboard._sendKey(obj.label);
                 keyD.style.backgroundColor = "rgb(255,255,255)";
             };
-        } else if (obj.label in {"@":"",".com":"",".au":""}) {
+        } else if (obj.label in {"@":"","free":"","gmail":"","hotmail":"","laposte":"","orange":"","outlook":"","sfr":"","yahoo":"",".com":"",".fr":"",".net":""}) {
             keyD.onmouseup = function () {
                 fxKeyboard._sendKey(obj.label);
                 keyD.style.backgroundColor = "rgb(255,255,255)";
             };
-        } else if (obj.label === "Space") {
+        } else if (obj.label === "Espace") {
             keyD.onmouseup = function () {
                 fxKeyboard._sendKey(" ");
                 keyD.style.backgroundColor = "rgb(255,255,255)";
             };
-        } else if (obj.label === "Close") {
+        } else if (obj.label === "Fermer") {
             keyD.onmouseup = function () {
                 fxKeyboard._toggleOpen(false);
                 keyD.style.backgroundColor = "rgb(255,255,255)";
                 fxKeyboard.lastPress = "close";
             };
-        } else if (obj.label === "Enter") {
+        } else if (obj.label === "Entrée") {
             keyD.onmouseup = function () {
                 keyD.style.backgroundColor = "rgb(255,255,255)";
-				fxKeyboard._sendKey(obj.label);
+				fxKeyboard._sendKey("Enter");
+				document.activeElement.form.submit();
             };
         } else if (obj.label === "Tab") {
 			keyD.onmouseup = function () {
@@ -425,7 +440,7 @@ var fxKeyboard = {
             fxKeyboard.hierarchy.slavedIFrame.contentWindow.postMessage(JSON.stringify({"directive": "slave", "command": "sendKey", "key": character}), "*");
         } else {
             switch (character) {
-                case "Delete":
+                case "Retour":
                     fxKeyboard.focusElement.value = fxKeyboard.focusElement.value.slice(0, -1);
                     break;
                 case "Enter":
